@@ -1,40 +1,39 @@
 "use client";
 
 import { Envelope } from "@gravity-ui/icons";
-import { Button, FieldError, Input, Label, ListBox, Modal, Surface, TextArea, TextField,Select } from "@heroui/react";
+import { Button, FieldError, Input, Label, ListBox, Modal, Surface, TextArea, TextField, Select } from "@heroui/react";
 import { BiEdit } from "react-icons/bi";
 
-export function EditModal() {
-  const onSubmit= async(e)=>{
+export function EditModal({ destination }) {
+  const { _id, category, departureDate, country, price, duration, imageUrl, description, destinationName } = destination
+  const onSubmit = async (e) => {
     e.preventDefault()
-    const formData= new FormData(e.currentTarget);
-    const destination =Object.fromEntries(formData.entries())
+    const formData = new FormData(e.currentTarget);
+    const destination = Object.fromEntries(formData.entries())
     console.log(destination)
 
-  //  const res = await fetch('http://localhost:5000/destination',{
-  //     method:"POST",
-  //     headers:{
-  //       'content-type':'application/json'
-  //     },
-  //     body: JSON.stringify(destination)
-  //   })
-  //   const data=await res.json()
-  //   console.log(data)
+    const res = await fetch(`http://localhost:5000/destination/${_id}`, {
+      method: "PATCH",
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(destination)
+    })
+    const data = await res.json()
+    console.log(data)
   }
   return (
     <Modal>
-      <div className="flex justify-end">
-              <Button variant="outline" className={'rounded-none mt-5 mb-3 '}><BiEdit/>Edit</Button>
-            </div>
+      
+        <Button variant="outline" className={'rounded-none mt-5 mb-3 '}><BiEdit />Edit</Button>
+     
       <Modal.Backdrop>
         <Modal.Container placement="auto">
           <Modal.Dialog className="sm:max-w-md">
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Icon className="bg-accent-soft text-accent-soft-foreground">
-                <Envelope className="size-5" />
-              </Modal.Icon>
-              <Modal.Heading>Contact Us</Modal.Heading>
+
+              <Modal.Heading>Edit destinations</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="p-6">
               <Surface variant="default">
@@ -43,25 +42,26 @@ export function EditModal() {
                   className="p-10 space-y-8"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Destination Name */}
+
                     <div className="md:col-span-2">
-                      <TextField name="destinationName" isRequired>
+                      <TextField defaultValue={destinationName} name="destinationName" isRequired>
                         <Label>Destination Name</Label>
                         <Input placeholder="Bali Paradise" className="rounded-2xl" />
                         <FieldError />
                       </TextField>
                     </div>
 
-                    {/* Country */}
-                    <TextField name="country" isRequired>
+
+                    <TextField defaultValue={country} name="country" isRequired>
                       <Label>Country</Label>
                       <Input placeholder="Indonesia" className="rounded-2xl" />
                       <FieldError />
                     </TextField>
 
-                    {/* Category - Updated Select Component */}
+
                     <div>
                       <Select
+                        defaultValue={category}
                         name="category"
                         isRequired
                         className="w-full"
@@ -103,10 +103,11 @@ export function EditModal() {
                       </Select>
                     </div>
 
-                    {/* Price */}
-                    <TextField name="price" type="number" isRequired>
+
+                    <TextField defaultValue={price} name="price" type="number" isRequired>
                       <Label>Price (USD)</Label>
                       <Input
+
                         type="number"
                         placeholder="1299"
                         className="rounded-2xl"
@@ -114,8 +115,8 @@ export function EditModal() {
                       <FieldError />
                     </TextField>
 
-                    {/* Duration */}
-                    <TextField name="duration" isRequired>
+
+                    <TextField defaultValue={duration} name="duration" isRequired>
                       <Label>Duration</Label>
                       <Input
                         placeholder="7 Days / 6 Nights"
@@ -124,18 +125,18 @@ export function EditModal() {
                       <FieldError />
                     </TextField>
 
-                    {/* Departure Date */}
+
                     <div className="md:col-span-2">
-                      <TextField name="departureDate" type="date" isRequired>
+                      <TextField defaultValue={departureDate} name="departureDate" type="date" isRequired>
                         <Label>Departure Date</Label>
                         <Input type="date" className="rounded-2xl" />
                         <FieldError />
                       </TextField>
                     </div>
 
-                    {/* Image URL - Removed preview */}
+
                     <div className="md:col-span-2">
-                      <TextField name="imageUrl" isRequired>
+                      <TextField defaultValue={imageUrl} name="imageUrl" isRequired>
                         <Label>Image URL</Label>
                         <Input
                           type="url"
@@ -146,9 +147,9 @@ export function EditModal() {
                       </TextField>
                     </div>
 
-                    {/* Description */}
+
                     <div className="md:col-span-2">
-                      <TextField name="description" isRequired>
+                      <TextField defaultValue={description} name="description" isRequired>
                         <Label>Description</Label>
                         <TextArea
                           placeholder="Describe the travel experience..."
@@ -158,26 +159,18 @@ export function EditModal() {
                       </TextField>
                     </div>
                   </div>
-
-                  {/* Buttons */}
-
                   <Button
                     type="submit"
                     variant="outline"
 
                     className=" rounded-none w-full bg-cyan-500 text-white"
                   >
-                    Add Destination
+                    save
                   </Button>
                 </form>
               </Surface>
             </Modal.Body>
-            <Modal.Footer>
-              <Button slot="close" variant="secondary">
-                Cancel
-              </Button>
-              <Button slot="close">Send Message</Button>
-            </Modal.Footer>
+
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
