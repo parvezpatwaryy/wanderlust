@@ -1,7 +1,7 @@
 "use client";
+import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
-import { Check } from "@gravity-ui/icons";
-import { Button, Card, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { Button, Card, Description, FieldError, Form, Input, Label, Separator, TextField } from "@heroui/react";
 import { redirect } from "next/navigation";
 
 
@@ -18,13 +18,20 @@ const SignUpPage = () => {
       name: user.name,
       image: user.image
     })
-    if(data){
+    if (data) {
       redirect('/')
     }
-    if(error){
+    if (error) {
       alert('signup is error')
     }
   }
+
+  const handleGooglesignin = async () => {
+  await authClient.signIn.social({
+    provider: "google",
+  })
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="text-center my-3">
@@ -94,6 +101,14 @@ const SignUpPage = () => {
             </Button>
           </div>
         </Form>
+        <div className="">
+          <Separator />
+          <div className="text-center">or sign up with</div>
+          <Separator />
+        </div>
+        <div>
+          <Button onClick={handleGooglesignin} variant="outline" className={'w-full rounded-none'}><FcGoogle />Sign in with Google</Button>
+        </div>
       </Card>
     </div>
   );
